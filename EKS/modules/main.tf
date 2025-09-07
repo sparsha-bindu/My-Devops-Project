@@ -30,3 +30,28 @@ module "vpc" {
   public_subnet_cidrs  = var.public_subnet_cidrs
   cluster_name         = var.cluster_name
 }
+
+module "eks" {
+  source = "./modules/eks"
+
+  cluster_name    = var.cluster_name
+  cluster_version = var.cluster_version
+  vpc_id          = module.vpc.vpc_id
+  subnet_ids      = module.vpc.private_subnet_ids
+  node_groups     = var.node_groups
+}
+
+output "cluster_endpoint" {
+  description = "EKS cluster endpoint"
+  value       = module.eks.cluster_endpoint
+}
+
+output "cluster_name" {
+  description = "EKS cluster name"
+  value       = module.eks.cluster_name
+}
+
+output "vpc_id" {
+  description = "VPC ID"
+  value       = module.vpc.vpc_id
+}
